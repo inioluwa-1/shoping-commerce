@@ -12,7 +12,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">
+            <a class="navbar-brand fw-bold" href="admin.html">
                 <i class="fas fa-user-shield"></i> Admin Panel
             </a>
             <div class="d-flex align-items-center gap-3">
@@ -61,8 +61,18 @@
                         </select>
                     </div>
                     <div class="col-md-12">
-                        <label for="productImage" class="form-label">Image URL</label>
-                        <input type="text" class="form-control" id="productImage" placeholder="https://example.com/image.jpg">
+                        <label for="productImage" class="form-label">Product Image</label>
+                        <input type="file" class="form-control" id="productImage" accept="image/*" onchange="previewImage(event)">
+                        <small class="text-muted">Upload JPG, PNG, or GIF (Max 2MB)</small>
+                    </div>
+                    <div class="col-md-12" id="imagePreviewContainer" style="display: none;">
+                        <label class="form-label">Image Preview</label>
+                        <div class="text-center">
+                            <img id="imagePreview" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                            <button type="button" class="btn btn-sm btn-outline-danger d-block mx-auto mt-2" onclick="clearImage()">
+                                <i class="fas fa-times"></i> Remove Image
+                            </button>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <label for="productDescription" class="form-label">Description</label>
@@ -99,6 +109,7 @@
         // Initialize data
         let products = [];
         let productIdCounter = 1;
+        let currentImageBase64 = null;
 
         // Load data from localStorage on page load
         window.onload = function() {
@@ -107,16 +118,57 @@
             updateProductCount();
         };
 
+        // Preview image before upload
+        function previewImage(event) {
+            const file = event.target.files[0];
+            
+            if (!file) return;
+
+            // Check file size (2MB limit)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Image size must be less than 2MB!');
+                event.target.value = '';
+                return;
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload a valid image file!');
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageBase64 = e.target.result;
+                document.getElementById('imagePreview').src = currentImageBase64;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Clear selected image
+        function clearImage() {
+            document.getElementById('productImage').value = '';
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            currentImageBase64 = null;
+        }
+
         // Add new product
         function addProduct() {
             const name = document.getElementById('productName').value.trim();
             const price = parseFloat(document.getElementById('productPrice').value);
             const category = document.getElementById('productCategory').value;
-            const image = document.getElementById('productImage').value.trim();
             const description = document.getElementById('productDescription').value.trim();
 
             if (name === '' || isNaN(price) || price <= 0) {
                 alert("Please enter valid product name and price!");
+                return;
+            }
+
+            if (!currentImageBase64) {
+                alert("Please upload a product image!");
                 return;
             }
 
@@ -125,7 +177,7 @@
                 name: name,
                 price: price,
                 category: category,
-                image: image || 'https://via.placeholder.com/300x200?text=No+Image',
+                image: currentImageBase64,
                 description: description || 'No description available'
             };
 
@@ -140,8 +192,8 @@
             // Clear form
             document.getElementById('productName').value = '';
             document.getElementById('productPrice').value = '';
-            document.getElementById('productImage').value = '';
             document.getElementById('productDescription').value = '';
+            clearImage();
         }
 
         // Display all products (Admin view)
