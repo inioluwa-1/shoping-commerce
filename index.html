@@ -110,7 +110,7 @@
               </div>
               <div class="d-flex justify-content-between mb-3">
                 <strong>Total Price:</strong>
-                <strong id="cartTotal" class="text-danger fs-5">$0.00</strong>
+                <strong id="cartTotal" class="text-danger fs-5">₦0.00</strong>
               </div>
               <button onclick="checkout()" class="btn btn-success w-100 mb-2">
                 <i class="fas fa-credit-card"></i> Checkout
@@ -237,7 +237,7 @@
                                     <h5 class="card-title mb-0">${
                                       product.name
                                     }</h5>
-                                    <span class="badge bg-danger fs-6">$${product.price.toFixed(
+                                    <span class="badge bg-danger fs-6">₦${product.price.toFixed(
                                       2
                                     )}</span>
                                 </div>
@@ -303,7 +303,7 @@
 
         cartCount.textContent = itemCount;
         totalItems.textContent = itemCount;
-        cartTotal.textContent = `$${totalPrice.toFixed(2)}`;
+        cartTotal.textContent = `₦${totalPrice.toFixed(2)}`;
 
         if (cart.length === 0) {
           cartItemsDiv.innerHTML =
@@ -339,7 +339,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            <span class="text-danger fw-bold">$${(
+                            <span class="text-danger fw-bold">₦${(
                               item.price * item.quantity
                             ).toFixed(2)}</span>
                         </div>
@@ -427,14 +427,14 @@
 
         cart.forEach((item) => {
           orderDetails += `${item.name}\n`;
-          orderDetails += `  Qty: ${item.quantity} × $${item.price.toFixed(
+          orderDetails += `  Qty: ${item.quantity} × ₦${item.price.toFixed(
             2
-          )} = $${(item.quantity * item.price).toFixed(2)}\n\n`;
+          )} = ₦${(item.quantity * item.price).toFixed(2)}\n\n`;
         });
 
         orderDetails += "━━━━━━━━━━━━━━━━━━━━━━━━\n";
         orderDetails += `Total Items: ${itemCount}\n`;
-        orderDetails += `Total Amount: $${total.toFixed(2)}\n\n`;
+        orderDetails += `Total Amount: ₦${total.toFixed(2)}\n\n`;
         orderDetails += "✅ Thank you for your purchase!\n";
         orderDetails += "Your order has been placed successfully.";
 
