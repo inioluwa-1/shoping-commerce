@@ -1,297 +1,452 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>E-Commerce Store</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="admin.html">
-                <i class="fas fa-user-shield"></i> Admin Panel
-            </a>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-white">
-                    <i class="fas fa-box"></i> <span id="productCountNav">0</span> Products
-                </span>
-                <a href="index.html" class="btn btn-danger">
-                    <i class="fas fa-store"></i> View Store
-                </a>
-            </div>
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="admin.html">
+          <i class="fas fa-user-shield"></i> Admin Panel
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-white" id="adminGreeting">
+            <i class="fas fa-user-circle"></i> <span id="adminName">Admin</span>
+          </span>
+          <span class="text-white">
+            <i class="fas fa-box"></i>
+            <span id="productCountNav">0</span> Products
+          </span>
+          <a href="index.html" class="btn btn-danger">
+            <i class="fas fa-store"></i> View Store
+          </a>
+          <button class="btn btn-outline-light btn-sm" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
         </div>
+      </div>
     </nav>
 
     <div class="container mt-4">
-        <!-- Admin Welcome Banner -->
-        <div class="card bg-dark text-white mb-4">
-            <div class="card-body text-center py-3">
-                <h2 class="mb-0"><i class="fas fa-cog"></i> Product Management Dashboard</h2>
-                <p class="mb-0 small">Add, edit, and manage your store products</p>
-            </div>
+      <!-- Admin Welcome Banner -->
+      <div class="card bg-dark text-white mb-4">
+        <div class="card-body text-center py-3">
+          <h2 class="mb-0">
+            <i class="fas fa-cog"></i> Product Management Dashboard
+          </h2>
+          <p class="mb-0 small">Add, edit, and manage your store products</p>
         </div>
+      </div>
 
-        <!-- Add Product Form -->
-        <div class="card shadow mb-4">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Add New Product</h5>
+      <!-- Add Product Form -->
+      <div class="card shadow mb-4">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-plus-circle"></i> Add New Product
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="productName" class="form-label">Product Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="productName"
+                placeholder="Enter product name"
+              />
+            </div>
+            <div class="col-md-3">
+              <label for="productPrice" class="form-label">Price ($)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="productPrice"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+              />
+            </div>
+            <div class="col-md-3">
+              <label for="productCategory" class="form-label">Category</label>
+              <select class="form-control" id="productCategory">
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Food">Food</option>
+                <option value="Books">Books</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label for="productImage" class="form-label">Product Image</label>
+              <input
+                type="file"
+                class="form-control"
+                id="productImage"
+                accept="image/*"
+                onchange="previewImage(event)"
+              />
+              <small class="text-muted"
+                >Upload JPG, PNG, or GIF (Max 2MB)</small
+              >
+            </div>
+            <div
+              class="col-md-12"
+              id="imagePreviewContainer"
+              style="display: none"
+            >
+              <label class="form-label">Image Preview</label>
+              <div class="text-center">
+                <img
+                  id="imagePreview"
+                  src=""
+                  alt="Preview"
+                  class="img-thumbnail"
+                  style="max-height: 200px"
+                />
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger d-block mx-auto mt-2"
+                  onclick="clearImage()"
+                >
+                  <i class="fas fa-times"></i> Remove Image
+                </button>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label for="productDescription" class="form-label"
+                >Description</label
+              >
+              <textarea
+                class="form-control"
+                id="productDescription"
+                rows="2"
+                placeholder="Product description"
+              ></textarea>
+            </div>
+            <div class="col-12">
+              <button onclick="addProduct()" class="btn btn-danger w-100">
+                <i class="fas fa-plus"></i> Add Product
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Display -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card shadow">
+            <div
+              class="card-header bg-dark text-white d-flex justify-content-between align-items-center"
+            >
+              <h5 class="mb-0"><i class="fas fa-boxes"></i> All Products</h5>
+              <span class="badge bg-danger" id="productCountBadge"
+                >0 Products</span
+              >
             </div>
             <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" placeholder="Enter product name">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="productPrice" class="form-label">Price ($)</label>
-                        <input type="number" class="form-control" id="productPrice" placeholder="0.00" step="0.01" min="0">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="productCategory" class="form-label">Category</label>
-                        <select class="form-control" id="productCategory">
-                            <option value="Electronics">Electronics</option>
-                            <option value="Clothing">Clothing</option>
-                            <option value="Food">Food</option>
-                            <option value="Books">Books</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="productImage" class="form-label">Product Image</label>
-                        <input type="file" class="form-control" id="productImage" accept="image/*" onchange="previewImage(event)">
-                        <small class="text-muted">Upload JPG, PNG, or GIF (Max 2MB)</small>
-                    </div>
-                    <div class="col-md-12" id="imagePreviewContainer" style="display: none;">
-                        <label class="form-label">Image Preview</label>
-                        <div class="text-center">
-                            <img id="imagePreview" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
-                            <button type="button" class="btn btn-sm btn-outline-danger d-block mx-auto mt-2" onclick="clearImage()">
-                                <i class="fas fa-times"></i> Remove Image
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="productDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="productDescription" rows="2" placeholder="Product description"></textarea>
-                    </div>
-                    <div class="col-12">
-                        <button onclick="addProduct()" class="btn btn-danger w-100">
-                            <i class="fas fa-plus"></i> Add Product
-                        </button>
-                    </div>
-                </div>
+              <div id="productsContainer" class="row g-3">
+                <!-- Products will be displayed here -->
+              </div>
             </div>
+          </div>
         </div>
-
-        <!-- Products Display -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-boxes"></i> All Products</h5>
-                        <span class="badge bg-danger" id="productCountBadge">0 Products</span>
-                    </div>
-                    <div class="card-body">
-                        <div id="productsContainer" class="row g-3">
-                            <!-- Products will be displayed here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script>
-        // Initialize data
-        let products = [];
-        let productIdCounter = 1;
-        let currentImageBase64 = null;
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Load data from localStorage on page load
-        window.onload = function() {
-            loadFromLocalStorage();
-            displayProducts();
-            updateProductCount();
+      // Your Firebase configuration
+      // TODO: Replace with your actual Firebase config
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDkEsScJxVCepytzyQRvd5V1jg7Ht4fqi8",
+        authDomain: "shopping-commerce-5633f.firebaseapp.com",
+        projectId: "shopping-commerce-5633f",
+        storageBucket: "shopping-commerce-5633f.firebasestorage.app",
+        messagingSenderId: "608823832201",
+        appId: "1:608823832201:web:ec331a35274f8a50246058",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Make auth and signOut globally available
+      window.firebaseAuth = auth;
+      window.firebaseSignOut = signOut;
+
+      // Check authentication state
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in
+          const userName = user.displayName || user.email.split("@")[0];
+          document.getElementById("adminName").textContent = userName;
+          localStorage.setItem("userEmail", user.email);
+          localStorage.setItem("userName", userName);
+        } else {
+          // No user is signed in, redirect to login
+          window.location.href = "login.html";
+        }
+      });
+    </script>
+
+    <script>
+      // Initialize data
+      let products = [];
+      let productIdCounter = 1;
+      let currentImageBase64 = null;
+
+      // Load data from localStorage on page load
+      window.onload = function () {
+        loadFromLocalStorage();
+        displayProducts();
+        updateProductCount();
+
+        // Display user name from localStorage (will be updated by Firebase)
+        const userName = localStorage.getItem("userName");
+        if (userName) {
+          document.getElementById("adminName").textContent = userName;
+        }
+      };
+
+      // Preview image before upload
+      function previewImage(event) {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        // Check file size (2MB limit)
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Image size must be less than 2MB!");
+          event.target.value = "";
+          return;
+        }
+
+        // Check file type
+        if (!file.type.startsWith("image/")) {
+          alert("Please upload a valid image file!");
+          event.target.value = "";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          currentImageBase64 = e.target.result;
+          document.getElementById("imagePreview").src = currentImageBase64;
+          document.getElementById("imagePreviewContainer").style.display =
+            "block";
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Clear selected image
+      function clearImage() {
+        document.getElementById("productImage").value = "";
+        document.getElementById("imagePreview").src = "";
+        document.getElementById("imagePreviewContainer").style.display = "none";
+        currentImageBase64 = null;
+      }
+
+      // Add new product
+      function addProduct() {
+        const name = document.getElementById("productName").value.trim();
+        const price = parseFloat(document.getElementById("productPrice").value);
+        const category = document.getElementById("productCategory").value;
+        const description = document
+          .getElementById("productDescription")
+          .value.trim();
+
+        if (name === "" || isNaN(price) || price <= 0) {
+          alert("Please enter valid product name and price!");
+          return;
+        }
+
+        if (!currentImageBase64) {
+          alert("Please upload a product image!");
+          return;
+        }
+
+        const product = {
+          id: productIdCounter++,
+          name: name,
+          price: price,
+          category: category,
+          image: currentImageBase64,
+          description: description || "No description available",
         };
 
-        // Preview image before upload
-        function previewImage(event) {
-            const file = event.target.files[0];
-            
-            if (!file) return;
+        products.push(product);
+        saveToLocalStorage();
+        displayProducts();
+        updateProductCount();
 
-            // Check file size (2MB limit)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Image size must be less than 2MB!');
-                event.target.value = '';
-                return;
-            }
+        // Show success message
+        showAlert("Product added successfully!", "success");
 
-            // Check file type
-            if (!file.type.startsWith('image/')) {
-                alert('Please upload a valid image file!');
-                event.target.value = '';
-                return;
-            }
+        // Clear form
+        document.getElementById("productName").value = "";
+        document.getElementById("productPrice").value = "";
+        document.getElementById("productDescription").value = "";
+        clearImage();
+      }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentImageBase64 = e.target.result;
-                document.getElementById('imagePreview').src = currentImageBase64;
-                document.getElementById('imagePreviewContainer').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
+      // Display all products (Admin view)
+      function displayProducts() {
+        const container = document.getElementById("productsContainer");
 
-        // Clear selected image
-        function clearImage() {
-            document.getElementById('productImage').value = '';
-            document.getElementById('imagePreview').src = '';
-            document.getElementById('imagePreviewContainer').style.display = 'none';
-            currentImageBase64 = null;
-        }
-
-        // Add new product
-        function addProduct() {
-            const name = document.getElementById('productName').value.trim();
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const category = document.getElementById('productCategory').value;
-            const description = document.getElementById('productDescription').value.trim();
-
-            if (name === '' || isNaN(price) || price <= 0) {
-                alert("Please enter valid product name and price!");
-                return;
-            }
-
-            if (!currentImageBase64) {
-                alert("Please upload a product image!");
-                return;
-            }
-
-            const product = {
-                id: productIdCounter++,
-                name: name,
-                price: price,
-                category: category,
-                image: currentImageBase64,
-                description: description || 'No description available'
-            };
-
-            products.push(product);
-            saveToLocalStorage();
-            displayProducts();
-            updateProductCount();
-
-            // Show success message
-            showAlert('Product added successfully!', 'success');
-
-            // Clear form
-            document.getElementById('productName').value = '';
-            document.getElementById('productPrice').value = '';
-            document.getElementById('productDescription').value = '';
-            clearImage();
-        }
-
-        // Display all products (Admin view)
-        function displayProducts() {
-            const container = document.getElementById('productsContainer');
-            
-            if (products.length === 0) {
-                container.innerHTML = `
+        if (products.length === 0) {
+          container.innerHTML = `
                     <div class="col-12 text-center py-5">
                         <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
                         <h4 class="text-muted">No products yet</h4>
                         <p class="text-muted">Start by adding your first product using the form above.</p>
                     </div>
                 `;
-                return;
-            }
+          return;
+        }
 
-            container.innerHTML = '';
-            products.forEach(product => {
-                container.innerHTML += `
+        container.innerHTML = "";
+        products.forEach((product) => {
+          container.innerHTML += `
                     <div class="col-md-6 col-lg-4 col-xl-3">
                         <div class="card h-100 shadow-sm product-card">
-                            <img src="${product.image}" class="card-img-top product-image" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+                            <img src="${
+                              product.image
+                            }" class="card-img-top product-image" alt="${
+            product.name
+          }" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="card-title mb-0">${product.name}</h6>
-                                    <span class="badge bg-success">$${product.price.toFixed(2)}</span>
+                                    <h6 class="card-title mb-0">${
+                                      product.name
+                                    }</h6>
+                                    <span class="badge bg-success">$${product.price.toFixed(
+                                      2
+                                    )}</span>
                                 </div>
                                 <p class="text-muted small mb-1">
-                                    <i class="fas fa-tag"></i> ${product.category}
+                                    <i class="fas fa-tag"></i> ${
+                                      product.category
+                                    }
                                 </p>
-                                <p class="card-text small text-truncate" title="${product.description}">${product.description}</p>
+                                <p class="card-text small text-truncate" title="${
+                                  product.description
+                                }">${product.description}</p>
                             </div>
                             <div class="card-footer bg-transparent">
-                                <button onclick="deleteProduct(${product.id})" class="btn btn-danger btn-sm w-100">
+                                <button onclick="deleteProduct(${
+                                  product.id
+                                })" class="btn btn-danger btn-sm w-100">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
-            });
-        }
+        });
+      }
 
-        // Update product count display
-        function updateProductCount() {
-            const count = products.length;
-            document.getElementById('productCountNav').textContent = count;
-            document.getElementById('productCountBadge').textContent = `${count} Product${count !== 1 ? 's' : ''}`;
-        }
+      // Update product count display
+      function updateProductCount() {
+        const count = products.length;
+        document.getElementById("productCountNav").textContent = count;
+        document.getElementById(
+          "productCountBadge"
+        ).textContent = `${count} Product${count !== 1 ? "s" : ""}`;
+      }
 
-        // Delete product
-        function deleteProduct(productId) {
-            const product = products.find(p => p.id === productId);
-            if (confirm(`Are you sure you want to delete "${product.name}"?\n\nThis action cannot be undone.`)) {
-                products = products.filter(p => p.id !== productId);
-                saveToLocalStorage();
-                displayProducts();
-                updateProductCount();
-                showAlert('Product deleted successfully!', 'warning');
-            }
+      // Delete product
+      function deleteProduct(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (
+          confirm(
+            `Are you sure you want to delete "${product.name}"?\n\nThis action cannot be undone.`
+          )
+        ) {
+          products = products.filter((p) => p.id !== productId);
+          saveToLocalStorage();
+          displayProducts();
+          updateProductCount();
+          showAlert("Product deleted successfully!", "warning");
         }
+      }
 
-        // Show alert message
-        function showAlert(message, type = 'success') {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-            alertDiv.style.cssText = 'top: 80px; right: 20px; z-index: 9999; min-width: 300px;';
-            alertDiv.innerHTML = `
+      // Show alert message
+      function showAlert(message, type = "success") {
+        const alertDiv = document.createElement("div");
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.cssText =
+          "top: 80px; right: 20px; z-index: 9999; min-width: 300px;";
+        alertDiv.innerHTML = `
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             `;
-            document.body.appendChild(alertDiv);
-            
+        document.body.appendChild(alertDiv);
+
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 3000);
+      }
+
+      // Local Storage Functions
+      function saveToLocalStorage() {
+        localStorage.setItem("products", JSON.stringify(products));
+        localStorage.setItem("productIdCounter", productIdCounter);
+      }
+
+      function loadFromLocalStorage() {
+        const savedProducts = localStorage.getItem("products");
+        const savedCounter = localStorage.getItem("productIdCounter");
+
+        if (savedProducts) {
+          products = JSON.parse(savedProducts);
+        }
+        if (savedCounter) {
+          productIdCounter = parseInt(savedCounter);
+        }
+      }
+
+      // Logout function
+      async function handleLogout() {
+        if (confirm("Are you sure you want to logout?")) {
+          try {
+            await window.firebaseSignOut(window.firebaseAuth);
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userName");
+            showAlert("Logged out successfully!", "success");
             setTimeout(() => {
-                alertDiv.remove();
-            }, 3000);
+              window.location.href = "login.html";
+            }, 1000);
+          } catch (error) {
+            alert("Error logging out. Please try again.");
+          }
         }
-
-        // Local Storage Functions
-        function saveToLocalStorage() {
-            localStorage.setItem('products', JSON.stringify(products));
-            localStorage.setItem('productIdCounter', productIdCounter);
-        }
-
-        function loadFromLocalStorage() {
-            const savedProducts = localStorage.getItem('products');
-            const savedCounter = localStorage.getItem('productIdCounter');
-
-            if (savedProducts) {
-                products = JSON.parse(savedProducts);
-            }
-            if (savedCounter) {
-                productIdCounter = parseInt(savedCounter);
-            }
-        }
+      }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>
